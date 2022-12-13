@@ -6,6 +6,7 @@ import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle.apply
 import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
+import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.application.command.CreateArtistCommand
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -32,6 +33,12 @@ class Artist {
     constructor(command: CreateArtistCommand) {
         assertNameIsValid(command.name)
         apply(ArtistWasCreatedEvent(command.name))
+    }
+
+    @CommandHandler
+    fun changeArtistName(command: ChangeArtistNameCommand) {
+        assertNameIsValid(command.newArtistName)
+        apply(ArtistNameWasChanged(id, command.newArtistName))
     }
 
     private fun assertNameIsValid(name: String) {
