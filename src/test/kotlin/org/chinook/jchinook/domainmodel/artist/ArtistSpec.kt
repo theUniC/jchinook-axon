@@ -6,10 +6,10 @@ import org.chinook.jchinook.application.command.CreateArtistCommand
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-private const val INVALID_ARTIST_NAME   = ""
-private const val VALID_ARTIST_NAME     = "test"
+private const val INVALID_ARTIST_NAME = ""
+private const val VALID_ARTIST_NAME = "test"
 
-object ArtistSpec: Spek({
+object ArtistSpec : Spek({
     describe("Artist Aggregate") {
         val fixture: FixtureConfiguration<Artist> by memoized { AggregateTestFixture(Artist::class.java) }
 
