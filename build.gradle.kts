@@ -1,12 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.7.21"
-    val springBootVersion = "2.7.3"
-    id("org.springframework.boot") version springBootVersion
+    id("org.springframework.boot") version "2.7.3"
     id("io.spring.dependency-management") version "1.1.0"
     id("org.springdoc.openapi-gradle-plugin") version "1.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.flywaydb.flyway") version "9.10.1"
+    id("co.uzzu.dotenv.gradle") version "2.0.0"
+    val kotlinVersion = "1.7.21"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -34,6 +35,7 @@ val axonKotlinVersion = "4.6.0"
 val springDocOpenApiVersion = "1.6.13"
 val springBootVersion = "2.7.3"
 val mysqlConnectorJavaVersion = "8.0.31"
+val flywayVersion = "9.10.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
@@ -57,6 +59,8 @@ dependencies {
     // Dev
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.flywaydb:flyway-core:$flywayVersion")
+    compileOnly("org.flywaydb:flyway-mysql:$flywayVersion")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -87,5 +91,18 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform {
         includeEngines = mutableSetOf("spek2")
+    }
+}
+
+flyway {
+    url = env.FLYWAY_URL.value
+    user = env.FLYWAY_USERNAME.value
+    password = env.FLYWAY_PASSWORD.value
+    driver = "com.mysql.cj.jdbc.Driver"
+}
+
+buildscript {
+    dependencies {
+        classpath("org.flywaydb:flyway-mysql:9.10.1")
     }
 }

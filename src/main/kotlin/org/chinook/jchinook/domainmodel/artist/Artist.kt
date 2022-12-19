@@ -8,6 +8,7 @@ import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.application.command.CreateArtistCommand
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -20,10 +21,9 @@ import javax.persistence.Table
 @Table(name = "Artist")
 class Artist {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @AggregateIdentifier
     @Column(name = "ArtistId")
-    private val id: Int = 0
+    private lateinit var id: UUID
 
     @Column(name = "Name")
     @AggregateMember
@@ -32,13 +32,13 @@ class Artist {
     @CommandHandler
     constructor(command: CreateArtistCommand) {
         assertNameIsValid(command.name)
-        apply(ArtistWasCreatedEvent(command.name))
+        apply(ArtistWasCreatedEvent(command.id, command.name))
     }
 
     @CommandHandler
     fun changeArtistName(command: ChangeArtistNameCommand) {
         assertNameIsValid(command.newArtistName)
-        apply(ArtistNameWasChanged(id, command.newArtistName))
+        apply(ArtistNameWasChanged(command.artistId, command.newArtistName))
     }
 
     private fun assertNameIsValid(name: String) {
@@ -49,6 +49,7 @@ class Artist {
 
     @EventHandler
     private fun on(event: ArtistWasCreatedEvent) {
+        id = event.id
         name = event.name
     }
 }

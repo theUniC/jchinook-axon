@@ -10,5 +10,3 @@ services:
       MYSQL_USER: chinook
       MYSQL_PASSWORD: 1234Abcd
       MYSQL_DATABASE: chinook
-    volumes:
-      - .docker/mysql:/docker-entrypoint-initdb.d

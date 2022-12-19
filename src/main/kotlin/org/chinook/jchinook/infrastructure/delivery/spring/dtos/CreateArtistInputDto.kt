@@ -1,5 +1,8 @@
 package org.chinook.jchinook.infrastructure.delivery.spring.dtos
 
-data class ArtistDto(
+import java.util.UUID
+
+data class CreateArtistInputDto(
+    val id: UUID,
     val name: String
 )
