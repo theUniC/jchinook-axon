@@ -4,12 +4,14 @@ import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.application.command.CreateArtistCommand
+import org.junit.jupiter.api.Assertions
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.util.UUID
 
 private const val INVALID_ARTIST_NAME = ""
 private const val VALID_ARTIST_NAME = "test"
+private const val CHANGED_ARTIST_NAME = "Changed Artist Name"
 
 object ArtistSpec : Spek({
     describe("Artist Aggregate") {
@@ -42,8 +44,9 @@ object ArtistSpec : Spek({
             it("changes artist name successfully") {
                 val uuid = UUID.randomUUID()
                 fixture.givenCommands(CreateArtistCommand(uuid, VALID_ARTIST_NAME))
-                    .`when`(ChangeArtistNameCommand(uuid, "Changed Artist Name"))
-                    .expectEvents(ArtistNameWasChanged(uuid, "Changed Artist Name"))
+                    .`when`(ChangeArtistNameCommand(uuid, CHANGED_ARTIST_NAME))
+                    .expectEvents(ArtistNameWasChanged(uuid, CHANGED_ARTIST_NAME))
+                    .expectState { a -> Assertions.assertEquals(CHANGED_ARTIST_NAME, a.getName()) }
             }
         }
     }

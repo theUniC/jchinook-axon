@@ -8,7 +8,6 @@ This is a sample application to test out Axon Framework using [chinook database]
 2. Go to project root
 3. Run `sdk env`
 4. Run `cp .env.example .env`
-5. Run `cp src/main/resources/.env.example src/main/resources/.env`
 6. Run `docker compose up -d`
 7. Run `./gradlew flywayMigrate -i`
 8. Run `./gradlew bootRun`

@@ -2,7 +2,6 @@ package org.chinook.jchinook.infrastructure.delivery.spring.controllers.artist
 
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
-import org.chinook.jchinook.infrastructure.delivery.spring.dtos.CreateArtistInputDto
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.UpdateArtistInputDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable

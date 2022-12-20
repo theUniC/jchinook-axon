@@ -4,12 +4,12 @@ CREATE PROCEDURE ChangeArtistTableIdType()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE id INT;
-    DECLARE uuid CHAR(36);
+    DECLARE uuid VARCHAR(36);
     DECLARE artists CURSOR FOR SELECT ArtistId FROM Artist;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-    ALTER TABLE Artist ADD COLUMN ArtistUuid CHAR(36) AFTER ArtistId;
-    ALTER TABLE Album ADD COLUMN ArtistUuid CHAR(36);
+    ALTER TABLE Artist ADD COLUMN ArtistUuid VARCHAR(36) AFTER ArtistId;
+    ALTER TABLE Album ADD COLUMN ArtistUuid VARCHAR(36);
 
     OPEN artists;
 
@@ -31,8 +31,8 @@ BEGIN
     ALTER TABLE Artist DROP PRIMARY KEY;
     ALTER TABLE Artist DROP COLUMN ArtistId;
     ALTER TABLE Album DROP COLUMN ArtistId;
-    ALTER TABLE Artist CHANGE COLUMN ArtistUuid ArtistId CHAR(36) NOT NULL;
-    ALTER TABLE Album CHANGE COLUMN ArtistUuid ArtistId CHAR(36) NOT NULL;
+    ALTER TABLE Artist CHANGE COLUMN ArtistUuid ArtistId VARCHAR(36) NOT NULL;
+    ALTER TABLE Album CHANGE COLUMN ArtistUuid ArtistId VARCHAR(36) NOT NULL;
     ALTER TABLE Artist ADD PRIMARY KEY (ArtistId);
     ALTER TABLE Album ADD FOREIGN KEY FK_AlbumArtistId (ArtistId) REFERENCES Artist(ArtistId);
     SET foreign_key_checks = 1;
