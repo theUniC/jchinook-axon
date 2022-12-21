@@ -24,6 +24,7 @@ jobs:
     - uses: gradle/gradle-build-action@v2
       with:
         gradle-version: 7.6
+    - run: cp .env.example .env
     - name: Ktlin Check
       run: ./gradlew ktlintCheck
     - name: Tests
