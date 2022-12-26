@@ -1,5 +1,6 @@
 package org.chinook.jchinook.infrastructure.delivery.spring.controllers.artist
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.chinook.jchinook.application.command.CreateArtistCommand
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.CreateArtistInputDto
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/artists")
+@Tag(name = "Artist")
 class PostArtistController(val commandGateway: CommandGateway) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,5 +1,6 @@
 package org.chinook.jchinook.infrastructure.delivery.spring.controllers.artist
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.UpdateArtistInputDto
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
+@Tag(name = "Artist")
 class PutArtistController(val commandGateway: CommandGateway) {
     @PutMapping("/artist/{id}")
     @ResponseStatus(HttpStatus.OK)

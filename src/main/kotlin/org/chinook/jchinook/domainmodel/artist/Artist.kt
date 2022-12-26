@@ -4,10 +4,12 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle.apply
+import org.axonframework.modelling.command.AggregateLifecycle.markDeleted
 import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.application.command.CreateArtistCommand
+import org.chinook.jchinook.application.command.RemoveArtistCommand
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -40,6 +42,11 @@ class Artist {
         apply(ArtistNameWasChanged(command.artistId, command.newArtistName))
     }
 
+    @CommandHandler
+    fun removeArtist(command: RemoveArtistCommand) {
+        apply(ArtistWasRemoved(command.artistId))
+    }
+
     private fun assertNameIsValid(name: String) {
         if (name.isEmpty()) {
             throw InvalidArtistName(name)
@@ -55,5 +62,10 @@ class Artist {
     @EventHandler
     private fun on(event: ArtistNameWasChanged) {
         name = event.newArtistName
+    }
+
+    @EventHandler
+    private fun on(event: ArtistWasRemoved) {
+        markDeleted()
     }
 }
