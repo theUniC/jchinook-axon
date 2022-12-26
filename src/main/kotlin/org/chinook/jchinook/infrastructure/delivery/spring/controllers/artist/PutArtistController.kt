@@ -2,9 +2,12 @@ package org.chinook.jchinook.infrastructure.delivery.spring.controllers.artist
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.modelling.command.AggregateNotFoundException
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.UpdateArtistInputDto
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,4 +23,7 @@ class PutArtistController(val commandGateway: CommandGateway) {
     fun handleRequest(@PathVariable(name = "id") id: UUID, @RequestBody artistDto: UpdateArtistInputDto) {
         commandGateway.sendAndWait<Any>(ChangeArtistNameCommand(id, artistDto.artistName))
     }
+
+    @ExceptionHandler(AggregateNotFoundException::class)
+    fun handleException(ex: AggregateNotFoundException) = ResponseEntity.notFound().build<String>()
 }
