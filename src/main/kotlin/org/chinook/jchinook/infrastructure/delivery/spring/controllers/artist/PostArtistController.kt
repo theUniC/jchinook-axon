@@ -20,7 +20,7 @@ class PostArtistController(val commandGateway: CommandGateway) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(
-        ApiResponse(description = "Artist was created successfully", responseCode = "201")
+        ApiResponse(description = "Artist was created successfully", responseCode = "201"),
     )
     fun handleRequest(@RequestBody createArtistInputDto: CreateArtistInputDto) {
         commandGateway.sendAndWait<Any>(CreateArtistCommand(createArtistInputDto.id, createArtistInputDto.name))
