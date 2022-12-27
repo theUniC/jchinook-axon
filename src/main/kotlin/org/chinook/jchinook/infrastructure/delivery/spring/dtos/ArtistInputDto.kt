@@ -1,3 +1,3 @@
 package org.chinook.jchinook.infrastructure.delivery.spring.dtos
 
-data class UpdateArtistInputDto(val artistName: String)
+data class ArtistInputDto(val artistName: String)

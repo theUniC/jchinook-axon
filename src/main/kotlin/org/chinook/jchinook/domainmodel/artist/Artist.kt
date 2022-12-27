@@ -10,6 +10,7 @@ import org.axonframework.spring.stereotype.Aggregate
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.application.command.CreateArtistCommand
 import org.chinook.jchinook.application.command.RemoveArtistCommand
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -34,6 +35,7 @@ class Artist {
         apply(ArtistWasCreatedEvent(command.id, command.name))
     }
 
+    fun getId() = UUID.fromString(id)
     fun getName() = name
 
     @CommandHandler
