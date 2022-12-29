@@ -7,6 +7,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.chinook.jchinook.application.command.CreateArtistCommand
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistInputDto
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistOutputDto
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
@@ -34,5 +36,13 @@ class PostArtistController(val commandGateway: CommandGateway) {
         response.add(linkTo(methodOn(GetArtistController::class.java).handleRequest(uuid)).withSelfRel())
 
         return response
+    }
+
+    @MutationMapping
+    fun createArtist(@Argument artistName: String): ArtistOutputDto {
+        val uuid = UUID.randomUUID()
+        commandGateway.sendAndWait<Any>(CreateArtistCommand(uuid, artistName))
+
+        return ArtistOutputDto(uuid, artistName)
     }
 }

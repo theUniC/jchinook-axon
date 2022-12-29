@@ -3,6 +3,10 @@ type Query {
     artist(id: ID!): Artist
 }
 
+type Mutation {
+    createArtist(artistName: String!): Artist
+}
+
 type Artist {
     id: ID!
     name: String!
