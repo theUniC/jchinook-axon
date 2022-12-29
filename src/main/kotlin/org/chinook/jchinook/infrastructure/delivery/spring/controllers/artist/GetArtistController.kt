@@ -9,6 +9,8 @@ import org.axonframework.modelling.command.AggregateNotFoundException
 import org.axonframework.queryhandling.QueryGateway
 import org.chinook.jchinook.application.query.GetArtistQuery
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistOutputDto
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.hateoas.mediatype.problem.Problem
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
@@ -51,4 +53,10 @@ class GetArtistController(val queryGateway: QueryGateway) {
                     .withTitle("Artist was not found")
                     .withDetail("Artist with ID ${ex.aggregateIdentifier} was not found")
             )
+
+    @QueryMapping
+    fun artist(@Argument id: UUID): ArtistOutputDto =
+        queryGateway
+            .query(GetArtistQuery(id), ArtistOutputDto::class.java)
+            .get()
 }
