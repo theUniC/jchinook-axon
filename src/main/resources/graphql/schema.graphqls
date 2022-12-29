@@ -1,0 +1,8 @@
+type Query {
+    artists(offset: Int, limit: Int): [Artist]
+}
+
+type Artist {
+    id: ID!
+    name: String!
+}

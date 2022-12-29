@@ -10,6 +10,8 @@ import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.chinook.jchinook.application.query.GetArtistsQuery
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistOutputDto
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.hateoas.CollectionModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
@@ -29,8 +31,8 @@ class GetArtistsController(val queryGateway: QueryGateway) {
         ApiResponse(description = "The artists collection", content = [Content(mediaType = "application/hal+json", array = ArraySchema(schema = Schema(implementation = ArtistOutputDto::class)))])
     )
     @ResponseBody
-    fun handleRequest(@RequestParam offset: Optional<Int>, @RequestParam limit: Optional<Int>): Future<ResponseEntity<CollectionModel<ArtistOutputDto>>> {
-        return queryGateway
+    fun handleRequest(@RequestParam offset: Optional<Int>, @RequestParam limit: Optional<Int>): Future<ResponseEntity<CollectionModel<ArtistOutputDto>>> =
+        queryGateway
             .query(GetArtistsQuery(offset.orElse(0), limit.orElse(10)), ResponseTypes.multipleInstancesOf(ArtistOutputDto::class.java))
             .thenApply { `as` ->
                 `as`.forEach { a -> a.add(linkTo(methodOn(GetArtistController::class.java).handleRequest(a.id)).withSelfRel()) }
@@ -41,5 +43,10 @@ class GetArtistsController(val queryGateway: QueryGateway) {
                     .of(`as`, linkTo(methodOn(GetArtistsController::class.java).handleRequest(Optional.empty(), Optional.empty())).withSelfRel())
             }
             .thenApply { `as` -> ResponseEntity.ok(`as`) }
-    }
+
+    @QueryMapping
+    fun artists(@Argument offset: Optional<Int>, @Argument limit: Optional<Int>): List<ArtistOutputDto> =
+        queryGateway
+            .query(GetArtistsQuery(offset.orElse(0), limit.orElse(10)), ResponseTypes.multipleInstancesOf(ArtistOutputDto::class.java))
+            .get()
 }
