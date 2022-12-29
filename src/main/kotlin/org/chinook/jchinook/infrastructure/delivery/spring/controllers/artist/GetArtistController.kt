@@ -54,6 +54,7 @@ class GetArtistController(val queryGateway: QueryGateway) {
                     .withDetail("Artist with ID ${ex.aggregateIdentifier} was not found")
             )
 
+    // GraphQL Endpoint
     @QueryMapping
     fun artist(@Argument id: UUID): ArtistOutputDto =
         queryGateway

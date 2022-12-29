@@ -10,6 +10,8 @@ import org.axonframework.modelling.command.AggregateNotFoundException
 import org.chinook.jchinook.application.command.ChangeArtistNameCommand
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistInputDto
 import org.chinook.jchinook.infrastructure.delivery.spring.dtos.ArtistOutputDto
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.hateoas.mediatype.problem.Problem
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
@@ -54,4 +56,10 @@ class PutArtistController(val commandGateway: CommandGateway) {
                     .withTitle("Artist was not found")
                     .withDetail("Artist with ID ${ex.aggregateIdentifier} was not found")
             )
+
+    @MutationMapping
+    fun updateArtist(@Argument id: UUID, @Argument artistName: String): ArtistOutputDto {
+        commandGateway.sendAndWait<Any>(ChangeArtistNameCommand(id, artistName))
+        return ArtistOutputDto(id, artistName)
+    }
 }

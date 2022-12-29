@@ -5,6 +5,7 @@ type Query {
 
 type Mutation {
     createArtist(artistName: String!): Artist
+    updateArtist(id: ID!, artistName: String!): Artist
 }
 
 type Artist {
